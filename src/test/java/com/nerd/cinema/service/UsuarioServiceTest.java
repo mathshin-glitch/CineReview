@@ -16,11 +16,18 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.never;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.mockito.ArgumentCaptor;
+
 @ExtendWith(MockitoExtension.class)
 public class UsuarioServiceTest {
 
     @Mock
     private UsuarioRepository usuarioRepository;
+
+    @Mock
+    private PasswordEncoder passwordEncoder;
 
     @InjectMocks
     private UsuarioService usuarioService;
@@ -66,12 +73,25 @@ public class UsuarioServiceTest {
         when(usuarioRepository.existsByEmail(usuario.getEmail()))
                 .thenReturn(false);
 
-        // Act: execução do método que queremos testar
+        // Simulando o retorno do BCrypt
+        when(passwordEncoder.encode("senha123"))
+                .thenReturn("hash-gerado");
+
+        // Act: execução do método
         boolean resultado = usuarioService.cadastrarUsuario(usuario);
-        
-        // Assert: verificação do resultado
+
+        // Assert: verificando o resultado
         assertTrue(resultado);
+
+        // Capturando o objeto enviado ao Repository
+        ArgumentCaptor<Usuario> captor
+                = ArgumentCaptor.forClass(Usuario.class);
+
+        verify(usuarioRepository).save(captor.capture());
+
+        // Verificando se foi salvo o hash, e não a senha original
+        assertEquals("hash-gerado", captor.getValue().getSenha());
         
-        verify(usuarioRepository).save(usuario);
+        verify(passwordEncoder, never()).encode(usuario.getSenha());
     }
 }
