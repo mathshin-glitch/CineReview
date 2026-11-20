@@ -2,12 +2,18 @@ package com.nerd.cinema.model;
 
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
 public class Usuario {
+    
+    //Declarando o Perfil Enum
+    @Enumerated(EnumType.STRING)
+    private Perfil perfil;
     
     //Atributos
     @Id
@@ -19,11 +25,12 @@ public class Usuario {
     private String senha;
     
     //Construtor
-    public Usuario(Long id, String nome, String email, String senha) {
+    public Usuario(Long id, String nome, String email, String senha, Perfil perfil) {
         this.id = id;
         this.nome = nome;
         this.email = email;
         this.senha = senha;
+        this.perfil = perfil;
     }
     
     //Construtor vazio.
@@ -63,5 +70,13 @@ public class Usuario {
     public void setSenha(String senha) {
         this.senha = senha;
     }
-        
+
+    public Perfil getPerfil() {
+        return perfil;
+    }
+
+    public void setPerfil(Perfil perfil) {
+        this.perfil = perfil;
+    }   
+    
 }

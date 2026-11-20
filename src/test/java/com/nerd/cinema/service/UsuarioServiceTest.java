@@ -7,6 +7,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.nerd.cinema.model.Usuario;
+import com.nerd.cinema.model.Perfil;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -42,7 +43,7 @@ public class UsuarioServiceTest {
                 null,
                 "Matheus",
                 "teste@gmail.com",
-                "senha123"
+                "senha123", Perfil.USER
         );
 
         when(usuarioRepository.existsByEmail(usuario.getEmail()))
@@ -67,7 +68,7 @@ public class UsuarioServiceTest {
                 null,
                 "Matheus",
                 "teste@gmail.com",
-                "senha123"
+                "senha123", Perfil.USER
         );
 
         when(usuarioRepository.existsByEmail(usuario.getEmail()))
@@ -91,6 +92,8 @@ public class UsuarioServiceTest {
 
         // Verificando se foi salvo o hash, e não a senha original
         assertEquals("hash-gerado", captor.getValue().getSenha());
+        // Verrificando se o usuario recebeu o perfil de USER
+        assertEquals(Perfil.USER, captor.getValue().getPerfil());
         
         verify(passwordEncoder, never()).encode(usuario.getSenha());
     }

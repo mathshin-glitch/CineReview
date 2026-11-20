@@ -1,6 +1,7 @@
 package com.nerd.cinema.service;
 
 import com.nerd.cinema.model.Usuario;
+import com.nerd.cinema.model.Perfil;
 import org.springframework.stereotype.Service;
 import com.nerd.cinema.repository.UsuarioRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,6 +27,9 @@ public class UsuarioService {
         if(usuarioRepository.existsByEmail(usuario.getEmail())){
             return false;
         }
+        
+        //Definindo o perfil padrão para novos cadastros.
+        usuario.setPerfil(Perfil.USER);
         
         //Linha responsavel pela geração da Hash.
         String senhaHash = passwordEncoder.encode(usuario.getSenha());
